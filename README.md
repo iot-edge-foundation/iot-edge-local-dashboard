@@ -12,7 +12,7 @@ The local dashboard can be reached at port 4242. Try 'http://localhost:4242' in 
 
 By default, the [tempSensor example module](https://github.com/Azure/iot-edge-v1/tree/master/v2/samples/azureiotedge-simulated-temperature-sensor) from Microsoft is supported: 'mcr.microsoft.com/azureiotedge-simulated-temperature-sensor:1.0.4'.
 
-Note: this temperature sensor simulation sends only 500 messages in a row by default.
+*Note*: this temperature sensor simulation sends only 500 messages in a row by default.
 
 ## Routing
 
@@ -47,15 +47,15 @@ Use the following create options:
 
 This makes the port accessible from outside the container.
 
-Note: The portnumber is 'hardcoded'. 
+*Note*: The portnumber is 'hardcoded'. 
 
 You can change the binding. In this case, the binding name 'appdata' is pointing to the local directory 'c:\iiothedge'. 
 
-Note: The binding name 'appdata' is obligated.
+*Note*: The binding name 'appdata' is obligated.
 
-Note: if the file can not be found in the folder provided, the default dashboard is shown.
+*Note*: if the file can not be found in the folder provided, the default dashboard is shown.
 
-## Device twin
+## Module twin, desired properties
 
 By default, the module will load the dashboard file named 'index.html'
 
@@ -63,4 +63,4 @@ You can override the filename with this property:
 
     "fileName": "indexlocal.html"
 
-Note: if the file can not be found, the default dashboard is shown.
+*Note*: if the file can not be found, the default dashboard is shown.
