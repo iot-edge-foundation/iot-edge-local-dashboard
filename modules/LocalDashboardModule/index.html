@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Azure IoT Edge - Local Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <h1>Local Dashboard</h1>
+
+    <div id="charts-1" ></div>
+
+    <div id="messages"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  
+    <script src="/scripts/highcharts.js"></script>
+    <script src="/scripts1/gray.js"></script>
+
+    <script>
+        $(function () { 
+            var noOfItems = -20; interval = 3000;
+
+            var chartLine = Highcharts.chart('charts-1', {
+                chart: {
+                    type: 'spline',
+                    animation: Highcharts.svg, // don't animate in old IE
+                    marginRight: 10,
+                    events: {
+                    }
+                },
+                title: {
+                    text: 'Temperature Sensor emulation (utc)'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    tickPixelInterval: 100
+                },
+                yAxis: {
+                    title: {
+                        text: 'Combined scale'
+                    },
+                    plotLines: [{
+                        value: 0.5,
+                        width: 1,
+                        color: '#808080'
+                    },
+                    {
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }]
+                },
+                tooltip: {
+                    formatter: function () {
+                        return '<b>' + this.series.name + '</b><br/>' +
+                            Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                            Highcharts.numberFormat(this.y, 2);
+                    }
+                },
+                legend: {
+                    enabled: true
+                },
+                exporting: {
+                    enabled: false
+                },
+                series: [
+                {
+                    name: 'Temperature',
+                    data: (function () {
+                        var data = [],
+                            time = (new Date()).getTime(),
+                            i;
+
+                        for (i = noOfItems; i <= 0; i += 1) {
+                            data.push({
+                                x: time + i * interval,
+                                y: 30
+                            });
+                        }
+                        return data;
+                    }())
+                },   
+                {
+                    name: 'Pressure',
+                    data: (function () {
+                        var data = [],
+                            time = (new Date()).getTime(),
+                            i;
+
+                        for (i = noOfItems; i <= 0; i += 1) {
+                            data.push({
+                                x: time + i * interval,
+                                y: 20
+                            });
+                        }
+                        return data;
+                    }())
+                },
+                {
+                    name: 'Ambient Temperature',
+                    data: (function () {
+                        var data = [],
+                            time = (new Date()).getTime(),
+                            i;
+
+                        for (i = noOfItems; i <= 0; i += 1) {
+                            data.push({
+                                x: time + i * interval,
+                                y: 10
+                            });
+                        }
+                        return data;
+                    }())
+                },
+                {
+                    name: 'Ambient Humidity',
+                    data: (function () {
+                        var data = [],
+                            time = (new Date()).getTime(),
+                            i;
+
+                        for (i = noOfItems; i <= 0; i += 1) {
+                            data.push({
+                                x: time + i * interval,
+                                y: 0
+                            });
+                        }
+                        return data;
+                    }())
+                }
+                ]
+            });      
+
+            var socket = io();
+
+            socket.on('broadcast message', function(msg){
+                    $('#messages').prepend($('<li>').text(msg));
+                    $('#messages li:gt(9)').remove(); // 10 lines of history
+
+                    var json = $.parseJSON(msg);
+                    var timestamp = (new Date(json.timeCreated)).getTime();
+
+                    var seriesModule0 = chartLine.series[0];
+                    var x = timestamp, 
+                        y = json.machine.temperature;
+                    seriesModule0.addPoint([x, y], true, true);
+
+                    var seriesModule1 = chartLine.series[1];
+                    var x = timestamp, 
+                        y = json.machine.pressure;
+                    seriesModule1.addPoint([x, y], true, true);
+
+                    var seriesModule2 = chartLine.series[2];
+                    var x = timestamp, 
+                        y = json.ambient.temperature;
+                    seriesModule2.addPoint([x, y], true, true);
+
+                    var seriesModule3 = chartLine.series[3];
+                    var x = timestamp, 
+                        y = json.ambient.humidity;
+                    seriesModule3.addPoint([x, y], true, true);                    
+            });
+        });
+    </script>
+</body>
+</html>
