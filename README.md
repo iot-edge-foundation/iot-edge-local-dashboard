@@ -16,7 +16,7 @@ By default, the [tempSensor example module](https://github.com/Azure/iot-edge-v1
 
 ## Routing
 
-Messages mist be routed to input route 'input1'. The same messages are passed through using output route 'output1'.
+Messages must be routed to input route 'input1'. The same messages are passed through using output route 'output1'.
 
 Use the following routes as an example:
 
@@ -47,7 +47,7 @@ Use the following create options:
 
 This makes the port accessible from outside the container.
 
-*Note*: The portnumber is 'hardcoded'. 
+*Note*: The port number is 'hardcoded'. 
 
 You can change the binding. In this case, the binding name 'appdata' is pointing to the local directory 'c:\iiothedge'. 
 
@@ -71,12 +71,12 @@ When accepted, the filename is shown in the reported twin properties.
 
 Provide your own HTML file by using the one in this module as an example.
 
-If you change the html file, please perform a 'iotedge restart ld' where 'ld' is the alias of your local dashboard module
+If you change the HTML file, a refresh of the browser page should be sufficient to see the changes. Or perform an 'iotedge restart ld' where 'ld' is the alias of your local dashboard module.
 
 ## Code junkie? Slacker?
 
 We have you covered both.
 
-If you like to dig into the code, zip it, clone it, extend it or even make pull request, we made it [open source](https://github.com/sandervandevelde/iotedge-localdashboard). 
+If you like to dig into the code, zip it, clone it, extend it or even make a pull request, we made it [open source](https://github.com/sandervandevelde/iotedge-localdashboard). 
 
-If you only want to use it the easy going way, pull it from [docker](https://hub.docker.com/r/svelde/localdashboard/) eg. 'svelde/localdashboard:1.0.0-amd64'. At this moment, only Linux containers are supported.
+If you only want to use it the easy-going way, pull it from [docker](https://hub.docker.com/r/svelde/localdashboard/) eg. 'svelde/localdashboard:1.0.1-amd64'. At this moment, only Linux containers are supported.
