@@ -62,6 +62,8 @@ By default, the module will load the dashboard file named 'index.html'
 You can override the filename with this property:
 
     "fileName": "indexlocal.html"
+    
+When accepted, the filename is shown in the reported twin properties.
 
 *Note*: if the file can not be found, the default dashboard is for the tempSensor shown.
 
