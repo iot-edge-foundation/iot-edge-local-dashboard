@@ -90,6 +90,15 @@ Client.fromEnvironment(Transport, function (err, client) {
                 }
 
                 console.log('---------------------------');
+
+                // create a reported twin to send to the IoT Hub IoT Edge module moduletwin
+                var reportedTwin = {fileName: desired.fileName};
+
+                // send the reported twin
+                twin.properties.reported.update(reportedTwin, function(err) {
+                  if (err) throw err;
+                  console.log('twin state reported');
+                });
               });
           }
         });      
