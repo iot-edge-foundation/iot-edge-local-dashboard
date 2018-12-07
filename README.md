@@ -12,7 +12,7 @@ The local dashboard can be reached at port 4242. Try 'http://localhost:4242' in 
 
 By default, the [tempSensor example module](https://github.com/Azure/iot-edge-v1/tree/master/v2/samples/azureiotedge-simulated-temperature-sensor) from Microsoft is supported: 'mcr.microsoft.com/azureiotedge-simulated-temperature-sensor:1.0.4'.
 
-*Note*: this temperature sensor simulation sends only 500 messages in a row by default.
+*Note*: this temperature sensor simulation only sends 500 messages in a row by default.
 
 ## Routing
 
@@ -53,7 +53,7 @@ You can change the binding. In this case, the binding name 'appdata' is pointing
 
 *Note*: The binding name 'appdata' is obligated.
 
-*Note*: if the file can not be found in the folder provided, the default dashboard is shown.
+*Note*: if the file can not be found in the folder provided, the default dashboard for the tempSensor is shown.
 
 ## Module twin, desired properties
 
@@ -63,4 +63,18 @@ You can override the filename with this property:
 
     "fileName": "indexlocal.html"
 
-*Note*: if the file can not be found, the default dashboard is shown.
+*Note*: if the file can not be found, the default dashboard is for the tempSensor shown.
+
+## Custom dashboard
+
+Provide your own HTML file by using the one in this module as an example.
+
+If you change the html file, please perform a 'iotedge restart ld' where 'ld' is the alias of your local dashboard module
+
+## Code junkie? Slacker?
+
+We have you covered both.
+
+If you like to dig into the code, zip it, clone it, extend it or even make pull request, we made it [open source](https://github.com/sandervandevelde/iotedge-localdashboard). 
+
+If you only want to use it the easy going way, pull it from [docker](https://hub.docker.com/r/svelde/localdashboard/) eg. 'svelde/localdashboard:1.0.0-amd64'. At this moment, only Linux containers are supported.
