@@ -37,10 +37,16 @@ io.on('connection', function(socket){
     console.log('User disconnected');
   });
 
-  // chat message
+  // broadcast message
   socket.on('broadcast message', function(msg){
       io.emit('broadcast message', msg);
-      console.log('message: ' + msg);
+      console.log('message broadcasted: ' + msg);
+  });
+
+  // broadcast twin
+  socket.on('broadcast twin', function(desired){
+    io.emit('broadcast twin', desired);
+    console.log('twin broadcasted: ' + desired);
   });
 });
 
@@ -99,6 +105,8 @@ Client.fromEnvironment(Transport, function (err, client) {
                   if (err) throw err;
                   console.log('twin state reported');
                 });
+
+                io.emit('broadcast twin', desired);
               });
           }
         });      
