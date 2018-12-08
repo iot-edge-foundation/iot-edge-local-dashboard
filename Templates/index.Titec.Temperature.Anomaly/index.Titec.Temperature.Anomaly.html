@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Azure IoT Edge - Local tTitec temperature anomaly dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- 
+        Example Input Message:
+        ======================    
+        
+        {
+            "deviceid":"Wise4012-33",
+            "time":"2018-12-08T21:33:16.0000000",
+            "temp":22.1293945,
+            "spikeanddipscore":0.33339894993873187,
+            "isspikeanddipanomaly":0,
+            "changepointscore":1.6206644213630433E-42,
+            "ischangepointanomaly":0
+        }
+        -->
+
+    </head>
+    <body>
+        <h1>Titec Temperature Anomaly dashboard</h1>
+
+        <div id="charts-1" ></div>
+
+        <div id="messages"></div>
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    
+        <script src="/scripts/highcharts.js"></script>
+        <script src="/scripts1/gray.js"></script>
+
+        <script>
+            $(function () { 
+				// noOfItems you want to show on the chart
+                var noOfItems = -60;
+				// interval of the arriving data
+				var	interval = 5000;
+
+                var chartLine = Highcharts.chart('charts-1', {
+                    chart: {
+                        type: 'spline',
+                        animation: Highcharts.svg, // don't animate in old IE
+                        marginRight: 10,
+                        events: {
+                        }
+                    },
+                    title: {
+                        text: 'Titec Temperature Anomaly (utc)'
+                    },
+                    xAxis: {
+                        type: 'datetime',
+                        tickPixelInterval: 100
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Combined scale'
+                        },
+                        plotLines: [{
+                            value: 0.5,
+                            width: 1,
+                            color: '#808080'
+                        },
+                        {
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }]
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            return '<b>' + this.series.name + '</b><br/>' +
+                                Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                                Highcharts.numberFormat(this.y, 2);
+                        }
+                    },
+                    legend: {
+                        enabled: true
+                    },
+                    exporting: {
+                        enabled: false
+                    },
+                    series: [
+                    {
+                        name: 'Temperature',
+                        data: (function () {
+                            var data = [],
+                                time = (new Date()).getTime(),
+                                i;
+
+                            for (i = noOfItems; i <= 0; i += 1) {
+                                data.push({
+                                    x: time + i * interval,
+                                    y: 40
+                                });
+                            }
+                            return data;
+                        }())
+                    },   
+                    {
+                        name: 'IsSpikeOrDip',
+                        data: (function () {
+                            var data = [],
+                                time = (new Date()).getTime(),
+                                i;
+
+                            for (i = noOfItems; i <= 0; i += 1) {
+                                data.push({
+                                    x: time + i * interval,
+                                    y: 30
+                                });
+                            }
+                            return data;
+                        }())
+                    },
+                    {
+                        name: 'SpikeOrDipScore',
+                        data: (function () {
+                            var data = [],
+                                time = (new Date()).getTime(),
+                                i;
+
+                            for (i = noOfItems; i <= 0; i += 1) {
+                                data.push({
+                                    x: time + i * interval,
+                                    y: 20
+                                });
+                            }
+                            return data;
+                        }())
+                    },
+                    {
+                        name: 'IsChangePoint',
+                        data: (function () {
+                            var data = [],
+                                time = (new Date()).getTime(),
+                                i;
+
+                            for (i = noOfItems; i <= 0; i += 1) {
+                                data.push({
+                                    x: time + i * interval,
+                                    y: 10
+                                });
+                            }
+                            return data;
+                        }())
+                    },
+                    {
+                        name: 'ChangePointScore',
+                        data: (function () {
+                            var data = [],
+                                time = (new Date()).getTime(),
+                                i;
+
+                            for (i = noOfItems; i <= 0; i += 1) {
+                                data.push({
+                                    x: time + i * interval,
+                                    y: 0
+                                });
+                            }
+                            return data;
+                        }())
+                    }]
+                });      
+
+                var socket = io();
+
+                socket.on('broadcast message', function(msg){
+                    // telemetry received
+                    listMessage(msg);
+					
+                    var json = $.parseJSON(msg);
+					var time = json.time + 'Z';
+
+                    var timestamp = (new Date(time)).getTime();
+
+                    var seriesModule0 = chartLine.series[0];
+                    var x = timestamp, 
+                        y = json.temp;
+                    seriesModule0.addPoint([x, y], true, true);
+
+                    var seriesModule1 = chartLine.series[1];
+                    var x = timestamp, 
+                        y = json.isspikeanddipanomaly;
+                    seriesModule1.addPoint([x, y], true, true);
+
+                    var seriesModule2 = chartLine.series[2];
+                    var x = timestamp, 
+                        y = json.spikeanddipscore;
+                    seriesModule2.addPoint([x, y], true, true);
+
+                    var seriesModule3 = chartLine.series[3];
+                    var x = timestamp, 
+                        y = json.ischangepointanomaly;
+                    seriesModule3.addPoint([x, y], true, true);                    
+
+                    var seriesModule4 = chartLine.series[4];
+                    var x = timestamp, 
+                        y = json.changepointscore;
+                    seriesModule4.addPoint([x, y], true, true);                    
+                });
+
+                socket.on('broadcast twin', function(desired){
+                    // desired module twin received
+                    if (desired.fileName) {
+                        listMessage('Desired filname received:' + desired.fileName);
+                    }
+                });
+            });
+
+            function listMessage(message){
+                $('#messages').prepend($('<li>').text(message));
+                $('#messages li:gt(9)').remove(); // 10 lines of history
+            }
+        </script>
+    </body>
+</html>
