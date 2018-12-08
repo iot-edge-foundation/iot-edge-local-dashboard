@@ -18,7 +18,7 @@ app.get('/', function(req, res){
 
   fs.access(path, fs.F_OK, (err) => {
     if (err) {
-      console.log('File not found. Using default index.html.');
+      console.log('File ' + fileName + ' not found in binding /appdata/. Using default index.html.');
 
       res.sendFile(__dirname + '/index.html');
     } else {
@@ -65,12 +65,12 @@ Client.fromEnvironment(Transport, function (err, client) {
       } else {
         console.log('     /$$$$$$      /$$$$$$  /$$    /$$ /$$$$$$$$ /$$       /$$$$$$$  /$$$$$$$$ ');
         console.log('   /$$$__  $$$   /$$__  $$| $$   | $$| $$_____/| $$      | $$__  $$| $$_____/ ');
-        console.log('  /$$_/  \_  $$ | $$  \__/| $$   | $$| $$      | $$      | $$  \ $$| $$       ');
+        console.log('  /$$_/  \\_  $$ | $$  \\__/| $$   | $$| $$      | $$      | $$  \\ $$| $$       ');
         console.log(' /$$/ /$$$$$  $$|  $$$$$$ |  $$ / $$/| $$$$$   | $$      | $$  | $$| $$$$$    ');
-        console.log('| $$ /$$  $$| $$ \____  $$ \  $$ $$/ | $$__/   | $$      | $$  | $$| $$__/    ');
-        console.log('| $$| $$\ $$| $$ /$$  \ $$  \  $$$/  | $$      | $$      | $$  | $$| $$       ');
-        console.log('| $$|  $$$$$$$$/|  $$$$$$/   \  $/   | $$$$$$$$| $$$$$$$$| $$$$$$$/| $$$$$$$$ ');
-        console.log('|  $$\________/  \______/     \_/    |________/|________/|_______/ |________/ ');
+        console.log('| $$ /$$  $$| $$ \\____  $$ \\  $$ $$/ | $$__/   | $$      | $$  | $$| $$__/    ');
+        console.log('| $$| $$\ $$| $$ /$$  \\  $$  \\  $$$/  | $$      | $$      | $$  | $$| $$       ');
+        console.log('| $$|  $$$$$$$$/|  $$$$$$/   \\  $/   | $$$$$$$$| $$$$$$$$| $$$$$$$/| $$$$$$$$ ');
+        console.log('|  $$\\________/  \\______/     \\_/    |________/|________/|_______/ |________/ ');
         console.log(' \\  $$$   /$$$                                                                ');
         console.log('  \\_  $$$$$$_/                                                                ');
         console.log('    \\______/                                                                  ');

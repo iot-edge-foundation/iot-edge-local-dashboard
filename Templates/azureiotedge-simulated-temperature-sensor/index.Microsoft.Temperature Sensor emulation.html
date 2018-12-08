@@ -21,7 +21,10 @@
 
         <script>
             $(function () { 
-                var noOfItems = -20; interval = 3000;
+				// noOfItems you want to show on the chart
+                var noOfItems = -600;
+				// interval of the arriving data
+				var	interval = 1000;
 
                 var chartLine = Highcharts.chart('charts-1', {
                     chart: {
@@ -138,7 +141,7 @@
 
                 socket.on('broadcast message', function(msg){
                     // telemetry received
-                    listMessage(msg);
+                    //listMessage(msg);
 
                     var json = $.parseJSON(msg);
                     var timestamp = (new Date(json.timeCreated)).getTime();

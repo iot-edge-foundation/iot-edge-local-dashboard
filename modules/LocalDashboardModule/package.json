@@ -4,6 +4,10 @@
     "author": "@svelde",
     "version": "1.0.1",
     "main": "app.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/sandervandevelde/iotedge-localdashboard"
+    },
     "scripts": {
         "start": "node app.js"
     },

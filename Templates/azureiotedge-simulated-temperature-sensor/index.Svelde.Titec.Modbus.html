@@ -5,9 +5,42 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Azure IoT Edge - Local simulated temperature sensor dashboard</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <!-- 
+        Example Input Message:
+        ======================    
+        
+        {    
+            "PublishTimestamp":"2018-12-08 16:08:26",
+            "Content":[
+              {
+                "HwId":"Wise4012-33",
+                "Data":[
+                  {
+                    "CorrelationId":"DefaultCorrelationId",
+                    "SourceTimestamp":"2018-12-08 16:08:26",
+                    "Values":[
+                      {
+                        "DisplayName":"Humidity",
+                        "Address":"40002",
+                        "Value":"28791"
+                      },{
+                        "DisplayName":"Temperature",
+                        "Address":"40001",
+                        "Value":"33849"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        -->
+
     </head>
     <body>
-        <h1>Microsoft simulated temperature sensor dashboard</h1>
+        <h1>Titec Modbus values dashboard</h1>
 
         <div id="charts-1" ></div>
 
@@ -22,9 +55,9 @@
         <script>
             $(function () { 
 				// noOfItems you want to show on the chart
-                var noOfItems = -20;
+                var noOfItems = -600;
 				// interval of the arriving data
-				var	interval = 3000;
+				var	interval = 1000;
 
                 var chartLine = Highcharts.chart('charts-1', {
                     chart: {
@@ -35,7 +68,7 @@
                         }
                     },
                     title: {
-                        text: 'Temperature Sensor emulation (utc)'
+                        text: 'Titec Temperature and Humidity(utc)'
                     },
                     xAxis: {
                         type: 'datetime',
@@ -87,7 +120,7 @@
                         }())
                     },   
                     {
-                        name: 'Pressure',
+                        name: 'Humidity',
                         data: (function () {
                             var data = [],
                                 time = (new Date()).getTime(),
@@ -97,38 +130,6 @@
                                 data.push({
                                     x: time + i * interval,
                                     y: 20
-                                });
-                            }
-                            return data;
-                        }())
-                    },
-                    {
-                        name: 'Ambient Temperature',
-                        data: (function () {
-                            var data = [],
-                                time = (new Date()).getTime(),
-                                i;
-
-                            for (i = noOfItems; i <= 0; i += 1) {
-                                data.push({
-                                    x: time + i * interval,
-                                    y: 10
-                                });
-                            }
-                            return data;
-                        }())
-                    },
-                    {
-                        name: 'Ambient Humidity',
-                        data: (function () {
-                            var data = [],
-                                time = (new Date()).getTime(),
-                                i;
-
-                            for (i = noOfItems; i <= 0; i += 1) {
-                                data.push({
-                                    x: time + i * interval,
-                                    y: 0
                                 });
                             }
                             return data;
@@ -144,27 +145,43 @@
                     listMessage(msg);
 
                     var json = $.parseJSON(msg);
-                    var timestamp = (new Date(json.timeCreated)).getTime();
 
-                    var seriesModule0 = chartLine.series[0];
-                    var x = timestamp, 
-                        y = json.machine.temperature;
-                    seriesModule0.addPoint([x, y], true, true);
+					var convertedDateTime = 
+					  json.PublishTimestamp.substring(0, 10)
+					  + 'T' + 
+					  json.PublishTimestamp.substring(11, 19) + '.0Z' ;
+								
+					var timestamp = (new Date(convertedDateTime)).getTime();
+										
+                    for(var i = 0; i < json.Content.length; i++){
+                        for(var j = 0; j < json.Content[i].Data.length; j++){
+                            for(var k = 0; k < json.Content[i].Data[j].Values.length; k++){
+                                var d = json.Content[i].Data[j].Values[k].DisplayName;
+                                var a = json.Content[i].Data[j].Values[k].Address;
+                                var v = json.Content[i].Data[j].Values[k].Value;
+                                							
+                                if (d == 'Temperature') {
+                                    var seriesModule0 = chartLine.series[0];
+                                    var x = timestamp, 
+                                        y = parseInt(v);
+                                    seriesModule0.addPoint([x, y], true, true);
+									
+									var temp = ((parseInt(v) / 65535) * 100) - 30;
+									listMessage('Temperature: ' + temp);
+                                }
 
-                    var seriesModule1 = chartLine.series[1];
-                    var x = timestamp, 
-                        y = json.machine.pressure;
-                    seriesModule1.addPoint([x, y], true, true);
+                                if (d == 'Humidity') {
+                                    var seriesModule1 = chartLine.series[1];
+                                    var x = timestamp, 
+                                        y = parseInt(v);
+                                    seriesModule1.addPoint([x, y], true, true);  
 
-                    var seriesModule2 = chartLine.series[2];
-                    var x = timestamp, 
-                        y = json.ambient.temperature;
-                    seriesModule2.addPoint([x, y], true, true);
-
-                    var seriesModule3 = chartLine.series[3];
-                    var x = timestamp, 
-                        y = json.ambient.humidity;
-                    seriesModule3.addPoint([x, y], true, true);                    
+									var hum = ((parseInt(v) / 65535) * 100);
+									listMessage('Humidity: ' + hum);									
+                                }
+                            }
+                        }
+                    }            
                 });
 
                 socket.on('broadcast twin', function(desired){
