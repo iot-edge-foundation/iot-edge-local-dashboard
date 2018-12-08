@@ -188,6 +188,16 @@
                     // desired module twin received
                     if (desired.fileName) {
                         listMessage('Desired filname received:' + desired.fileName);
+
+                        if (desired.interval) {
+                            interval = desired.interval;
+                            console.log('interval is changed to ' + interval);
+                        }
+
+                        if (desired.noOfItems) {
+                            interval = desired.noOfItems;
+                            console.log('noOfItems is changed to ' + noOfItems);
+                        }
                     }
                 });
             });

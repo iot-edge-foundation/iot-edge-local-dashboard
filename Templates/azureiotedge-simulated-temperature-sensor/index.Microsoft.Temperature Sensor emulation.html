@@ -141,7 +141,7 @@
 
                 socket.on('broadcast message', function(msg){
                     // telemetry received
-                    //listMessage(msg);
+                    listMessage(msg);
 
                     var json = $.parseJSON(msg);
                     var timestamp = (new Date(json.timeCreated)).getTime();
