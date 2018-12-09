@@ -26,6 +26,8 @@
         <h1>Titec Temperature Anomaly dashboard</h1>
 
         <div id="charts-1" ></div>
+        <div id="charts-2" ></div>
+        <div id="charts-3" ></div>
 
         <div id="messages"></div>
 
@@ -38,11 +40,11 @@
         <script>
             $(function () { 
 				// noOfItems you want to show on the chart
-                var noOfItems = -60;
+                var noOfItems = -180;
 				// interval of the arriving data
-				var	interval = 5000;
+				var	interval = 1000;
 
-                var chartLine = Highcharts.chart('charts-1', {
+                var chartTemp = Highcharts.chart('charts-1', {
                     chart: {
                         type: 'spline',
                         animation: Highcharts.svg, // don't animate in old IE
@@ -51,7 +53,64 @@
                         }
                     },
                     title: {
-                        text: 'Titec Temperature Anomaly (utc)'
+                        text: 'Titec Temperature (utc)'
+                    },
+                    xAxis: {
+                        type: 'datetime',
+                        tickPixelInterval: 100
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Temperature'
+                        },
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }]
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            return '<b>' + this.series.name + '</b><br/>' +
+                                Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                                Highcharts.numberFormat(this.y, 2);
+                        }
+                    },
+                    legend: {
+                        enabled: true
+                    },
+                    exporting: {
+                        enabled: false
+                    },
+                    series: [
+                    {
+                        name: 'Temperature',
+                        data: (function () {
+                            var data = [],
+                                time = (new Date()).getTime(),
+                                i;
+
+                            for (i = noOfItems; i <= 0; i += 1) {
+                                data.push({
+                                    x: time + i * interval,
+                                    y: 20
+                                });
+                            }
+                            return data;
+                        }())
+                    }]
+                });      
+
+				var chartAnomaly = Highcharts.chart('charts-2', {
+                    chart: {
+                        type: 'spline',
+                        animation: Highcharts.svg, // don't animate in old IE
+                        marginRight: 10,
+                        events: {
+                        }
+                    },
+                    title: {
+                        text: 'Titec Anomaly (utc)'
                     },
                     xAxis: {
                         type: 'datetime',
@@ -87,7 +146,7 @@
                     },
                     series: [
                     {
-                        name: 'Temperature',
+                        name: 'SpikeAndDip',
                         data: (function () {
                             var data = [],
                                 time = (new Date()).getTime(),
@@ -96,14 +155,14 @@
                             for (i = noOfItems; i <= 0; i += 1) {
                                 data.push({
                                     x: time + i * interval,
-                                    y: 40
+                                    y: 0
                                 });
                             }
                             return data;
                         }())
                     },   
                     {
-                        name: 'IsSpikeOrDip',
+                        name: 'ChangePoint',
                         data: (function () {
                             var data = [],
                                 time = (new Date()).getTime(),
@@ -112,14 +171,61 @@
                             for (i = noOfItems; i <= 0; i += 1) {
                                 data.push({
                                     x: time + i * interval,
-                                    y: 30
+                                    y: 0
                                 });
                             }
                             return data;
                         }())
+                    }]
+                });      
+
+				
+				var chartScore = Highcharts.chart('charts-3', {
+                    chart: {
+                        type: 'spline',
+                        animation: Highcharts.svg, // don't animate in old IE
+                        marginRight: 10,
+                        events: {
+                        }
                     },
+                    title: {
+                        text: 'Titec Temperature Anomaly Score (utc)'
+                    },
+                    xAxis: {
+                        type: 'datetime',
+                        tickPixelInterval: 100
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Combined scale'
+                        },
+                        plotLines: [{
+                            value: 0.5,
+                            width: 1,
+                            color: '#808080'
+                        },
+                        {
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }]
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            return '<b>' + this.series.name + '</b><br/>' +
+                                Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                                Highcharts.numberFormat(this.y, 2);
+                        }
+                    },
+                    legend: {
+                        enabled: true
+                    },
+                    exporting: {
+                        enabled: false
+                    },
+                    series: [
                     {
-                        name: 'SpikeOrDipScore',
+                        name: 'SpikeAndDipScore',
                         data: (function () {
                             var data = [],
                                 time = (new Date()).getTime(),
@@ -128,28 +234,12 @@
                             for (i = noOfItems; i <= 0; i += 1) {
                                 data.push({
                                     x: time + i * interval,
-                                    y: 20
+                                    y: 0
                                 });
                             }
                             return data;
                         }())
-                    },
-                    {
-                        name: 'IsChangePoint',
-                        data: (function () {
-                            var data = [],
-                                time = (new Date()).getTime(),
-                                i;
-
-                            for (i = noOfItems; i <= 0; i += 1) {
-                                data.push({
-                                    x: time + i * interval,
-                                    y: 10
-                                });
-                            }
-                            return data;
-                        }())
-                    },
+                    },   
                     {
                         name: 'ChangePointScore',
                         data: (function () {
@@ -168,38 +258,42 @@
                     }]
                 });      
 
+				
+				
                 var socket = io();
 
                 socket.on('broadcast message', function(msg){
                     // telemetry received
                     listMessage(msg);
-					
+									
                     var json = $.parseJSON(msg);
+					
 					var time = json.time + 'Z';
 
                     var timestamp = (new Date(time)).getTime();
 
-                    var seriesModule0 = chartLine.series[0];
+					// Temperature
+                    var seriesModule0 = chartTemp.series[0];
                     var x = timestamp, 
                         y = json.temp;
                     seriesModule0.addPoint([x, y], true, true);
 
-                    var seriesModule1 = chartLine.series[1];
+                    var seriesModule1 = chartAnomaly.series[0];
                     var x = timestamp, 
                         y = json.isspikeanddipanomaly;
                     seriesModule1.addPoint([x, y], true, true);
 
-                    var seriesModule2 = chartLine.series[2];
-                    var x = timestamp, 
-                        y = json.spikeanddipscore;
-                    seriesModule2.addPoint([x, y], true, true);
-
-                    var seriesModule3 = chartLine.series[3];
+                    var seriesModule2 = chartAnomaly.series[1];
                     var x = timestamp, 
                         y = json.ischangepointanomaly;
+                    seriesModule2.addPoint([x, y], true, true);
+
+                    var seriesModule3 = chartScore.series[0];
+                    var x = timestamp, 
+                        y = json.spikeanddipscore;
                     seriesModule3.addPoint([x, y], true, true);                    
 
-                    var seriesModule4 = chartLine.series[4];
+                    var seriesModule4 = chartScore.series[1];
                     var x = timestamp, 
                         y = json.changepointscore;
                     seriesModule4.addPoint([x, y], true, true);                    
