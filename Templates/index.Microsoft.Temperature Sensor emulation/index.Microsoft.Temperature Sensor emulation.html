@@ -11,8 +11,11 @@
         ======================    
         
         {
-            "temperature":20.879439137121402,
-            "pressure":0.98626521815307111},
+            "machine":
+            {
+                "temperature":20.879439137121402,
+                "pressure":0.98626521815307111}
+            },
             "ambient":
             {
                 "temperature":21.119742694133773,
@@ -45,6 +48,7 @@
 
                 var chartLine = Highcharts.chart('charts-1', {
                     chart: {
+					    backgroundColor: '000000',
                         type: 'spline',
                         animation: Highcharts.svg, // don't animate in old IE
                         marginRight: 10,
@@ -86,9 +90,16 @@
                     exporting: {
                         enabled: false
                     },
+					plotOptions: {
+						series: {
+							marker: {
+								enabled: false
+							}
+						}
+					},
                     series: [
                     {
-                        name: 'Temperature',
+                        name: 'Machine temperature',
                         data: (function () {
                             var data = [],
                                 time = (new Date()).getTime(),
@@ -104,7 +115,7 @@
                         }())
                     },   
                     {
-                        name: 'Pressure',
+                        name: 'Machine pressure',
                         data: (function () {
                             var data = [],
                                 time = (new Date()).getTime(),
@@ -157,10 +168,27 @@
                 var socket = io();
 
                 socket.on('broadcast message', function(msg){
-                    // telemetry received
+
+                    if (msg == '')
+                    {
+                        listMessage('Empty message received');
+                        return;
+                    }
+
+                    // parse JSON
+                    var json = $.parseJSON(msg);
+
+                    if ((json.timeCreated == undefined)
+                            || (json.machine == undefined)
+                            || (json.ambient == undefined)) 
+                    {
+                        listMessage('Unsupported message: ' + msg);
+                        return;
+                    }
+
+					// telemetry received
                     listMessage(msg);
 
-                    var json = $.parseJSON(msg);
                     var timestamp = (new Date(json.timeCreated)).getTime();
 
                     var seriesModule0 = chartLine.series[0];

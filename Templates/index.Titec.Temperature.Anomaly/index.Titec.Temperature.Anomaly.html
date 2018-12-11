@@ -285,11 +285,26 @@
                 var socket = io();
 
                 socket.on('broadcast message', function(msg){
-                    // telemetry received
-                    listMessage(msg);
-									
+				
+                    if (msg == '')
+                    {
+                        listMessage('Empty message received');
+                        return;
+                    }
+				
                     var json = $.parseJSON(msg);
 					
+                    if ((json.time == undefined)
+                            || (json.temp == undefined)
+                            || (json.isspikeanddipanomaly == undefined)) 
+                    {
+                        listMessage('Unsupported message: ' + msg);
+                        return;
+                    }
+
+                    // telemetry received
+                    listMessage(msg);
+														
 					var time = json.time + 'Z';
 
                     var timestamp = (new Date(time)).getTime();
