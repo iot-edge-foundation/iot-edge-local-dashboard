@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Azure IoT Edge - Local tTitec temperature anomaly dashboard</title>
+        <title>Azure IoT Edge - Local Titec temperature anomaly dashboard</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- 
@@ -29,7 +29,7 @@
         <div id="charts-2" ></div>
         <div id="charts-3" ></div>
 
-        <div id="messages"></div>
+        <font size="5"><div id="messages"></div></font>
 
         <script src="/socket.io/socket.io.js"></script>
         <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -46,6 +46,7 @@
 
                 var chartTemp = Highcharts.chart('charts-1', {
                     chart: {
+					    backgroundColor: '000000',
                         type: 'spline',
                         animation: Highcharts.svg, // don't animate in old IE
                         marginRight: 10,
@@ -82,6 +83,13 @@
                     exporting: {
                         enabled: false
                     },
+					plotOptions: {
+						series: {
+							marker: {
+								enabled: false
+							}
+						}
+					},
                     series: [
                     {
                         name: 'Temperature',
@@ -103,6 +111,7 @@
 
 				var chartAnomaly = Highcharts.chart('charts-2', {
                     chart: {
+					    backgroundColor: '000000',
                         type: 'spline',
                         animation: Highcharts.svg, // don't animate in old IE
                         marginRight: 10,
@@ -144,7 +153,14 @@
                     exporting: {
                         enabled: false
                     },
-                    series: [
+                    					plotOptions: {
+						series: {
+							marker: {
+								enabled: false
+							}
+						}
+					},
+					series: [
                     {
                         name: 'SpikeAndDip',
                         data: (function () {
@@ -182,6 +198,7 @@
 				
 				var chartScore = Highcharts.chart('charts-3', {
                     chart: {
+					    backgroundColor: '000000',
                         type: 'spline',
                         animation: Highcharts.svg, // don't animate in old IE
                         marginRight: 10,
@@ -223,6 +240,13 @@
                     exporting: {
                         enabled: false
                     },
+					plotOptions: {
+						series: {
+							marker: {
+								enabled: false
+							}
+						}
+					},
                     series: [
                     {
                         name: 'SpikeAndDipScore',
@@ -258,8 +282,6 @@
                     }]
                 });      
 
-				
-				
                 var socket = io();
 
                 socket.on('broadcast message', function(msg){
