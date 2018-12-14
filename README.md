@@ -4,6 +4,8 @@ Azure IoT Edge module which ingests routed messages and displays values on a das
 
 To show a dashboard, we need an HTML file loaded from disk. You can provide your own HTML file by using the one in this module as an example.
 
+![image](https://github.com/sandervandevelde/iotedge-localdashboard/blob/master/Templates/index.microsoft.temperature.sensor.emulation/ld01.png)
+
 ## port 4242
 
 The local dashboard can be reached at port 4242. Try 'http://localhost:4242' in your favorite browser.
