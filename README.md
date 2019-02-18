@@ -35,7 +35,7 @@ Use the following create options:
       },
       "HostConfig": {
         "Binds": [
-          "c:/iiotedge:/appdata"
+          "c:/iiotedge/ldb:/appdata"
         ],
         "PortBindings": {
           "4242/tcp": [
