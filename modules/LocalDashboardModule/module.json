@@ -4,7 +4,7 @@
     "image": {
         "repository": "svelde/localdashboard",
         "tag": {
-            "version": "1.0.2",
+            "version": "1.0.5",
             "platforms": {
                 "amd64": "./Dockerfile.amd64"
             }

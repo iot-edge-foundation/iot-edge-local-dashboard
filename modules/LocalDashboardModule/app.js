@@ -122,19 +122,35 @@ function pipeMessage(client, inputName, msg) {
   if (inputName === 'input1') {
     var message = msg.getBytes().toString('utf8');
     if (message) {
-      var outputMsg = new Message(message);
+      var obj = JSON.parse(message);
 
-      console.log('Message to send: ' + message);
-
-      io.emit('broadcast message', message);
-
-      client.sendOutputEvent('output1', outputMsg, printResultFor('Sending received message'));
+      if (Array.isArray(obj)) {
+        // We got an array
+        for(var i = 0; i < obj.length; i++) {
+          // Send each element
+          var json = JSON.stringify(obj[i]);
+          outputMessage(client, json);
+        }
+      } else {
+        // send this single element
+        outputMessage(client, message);
+      }
     } else {
       console.log('Message ignored');
     }
   } else {
     console.log('unsupported input ' + inputName);
   }
+}
+
+function outputMessage(client, message) {
+  var outputMsg = new Message(message);
+
+  console.log('Message to send: -' + message + '-');
+
+  io.emit('broadcast message', message);
+
+  client.sendOutputEvent('output1', outputMsg, printResultFor('Sending received message'));
 }
 
 // Helper function to print results in the console
