@@ -15,7 +15,7 @@
     "dependencies": {
         "azure-iot-device": "1.8.2",
         "azure-iot-device-mqtt": "1.8.2",
-        "debug": "^4.1.0",
+        "debug": "^4.1.1",
         "express": "^4.16.4",
         "fs": "0.0.1-security",
         "highcharts": "^6.2.0",
