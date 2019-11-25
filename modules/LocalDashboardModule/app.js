@@ -63,18 +63,19 @@ Client.fromEnvironment(Transport, function (err, client) {
       if (err) {
         throw err;
       } else {
-        console.log('     /$$$$$$      /$$$$$$  /$$    /$$ /$$$$$$$$ /$$       /$$$$$$$  /$$$$$$$$ ');
-        console.log('   /$$$__  $$$   /$$__  $$| $$   | $$| $$_____/| $$      | $$__  $$| $$_____/ ');
-        console.log('  /$$_/  \\_  $$ | $$  \\__/| $$   | $$| $$      | $$      | $$  \\ $$| $$       ');
-        console.log(' /$$/ /$$$$$  $$|  $$$$$$ |  $$ / $$/| $$$$$   | $$      | $$  | $$| $$$$$    ');
-        console.log('| $$ /$$  $$| $$ \\____  $$ \\  $$ $$/ | $$__/   | $$      | $$  | $$| $$__/    ');
-        console.log('| $$| $$\ $$| $$ /$$  \\  $$  \\  $$$/  | $$      | $$      | $$  | $$| $$       ');
-        console.log('| $$|  $$$$$$$$/|  $$$$$$/   \\  $/   | $$$$$$$$| $$$$$$$$| $$$$$$$/| $$$$$$$$ ');
-        console.log('|  $$\\________/  \\______/     \\_/    |________/|________/|_______/ |________/ ');
-        console.log(' \\  $$$   /$$$                                                                ');
-        console.log('  \\_  $$$$$$_/                                                                ');
-        console.log('    \\______/                                                                  ');
-        console.log('IoT Edge localDashboard module client initialized.');
+        console.log('      _                         ___      _____   ___     _ ');
+        console.log('     /_\\   ___ _  _  _ _  ___  |_ _| ___|_   _| | __| __| | __ _  ___  ');
+        console.log('    / _ \\ |_ /| || || '_|/ -_)  | | / _ \\ | |   | _| / _` |/ _` |/ -_)');
+        console.log('   /_/ \\_\\/__| \\_,_||_|  \\___| |___|\\___/ |_|   |___|\\__,_|\\__, |\\___|');
+        console.log('                                                           |___/');
+        console.log('  _                 _   ___          _    _                      _  ');
+        console.log(' | |   ___  __ __ _| | |   \\ __ _ __| |_ | |__  ___  __ _ _ _ __| | ');
+        console.log(' | |__/ _ \/ _/ _` | | | |) / _` (_-< '' \\| ''_ \\/ _ \\/ _` | ''_/ _` | ');
+        console.log(' |____\\___/\\__\\__,_|_| |___/\\__,_/__/_||_|_.__/\\___/\\__,_|_| \\__,_| ');
+        console.log(' ');
+        console.log('   Copyright © 2019 - IoT Edge Foundation');
+        console.log(' ');
+
         console.log('Use input input1 and output output1.');
 
         // Act on input messages to the module.
