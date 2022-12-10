@@ -16,7 +16,7 @@
         "azure-iot-device": "1.8.2",
         "azure-iot-device-mqtt": "1.8.2",
         "debug": "^4.1.1",
-        "express": "^4.16.4",
+        "express": "^4.17.3",
         "fs": "0.0.1-security",
         "highcharts": "^9.0.0",
         "socketio": "^1.0.0"
